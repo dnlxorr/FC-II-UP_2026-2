@@ -1,0 +1,111 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introducción, alcance y metodología}{2}{section.1}\protected@file@percent }
+\newlabel{eq:orden}{{1}{2}{Introducción, alcance y metodología}{equation.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Problema 1: perfil estacionario de temperatura en una barra 1D}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Deducción del sistema lineal.}{2}{section*.2}\protected@file@percent }
+\newlabel{eq:poisson}{{2}{2}{Deducción del sistema lineal}{equation.2}{}}
+\newlabel{eq:taylor}{{3}{2}{Deducción del sistema lineal}{equation.3}{}}
+\newlabel{eq:difs}{{4}{3}{Deducción del sistema lineal}{equation.4}{}}
+\newlabel{eq:sistema}{{5}{3}{Deducción del sistema lineal}{equation.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Eliminación de Gauss con pivoteo parcial y sustitución inversa.}{3}{section*.3}\protected@file@percent }
+\newlabel{eq:back}{{6}{3}{Eliminación de Gauss con pivoteo parcial y sustitución inversa}{equation.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Factorización LU tridiagonal ($l_i$, $u_i$) y eliminación de Gauss ($\bm  {c}$, $\bm  {T}$) para $N=6$ y $q_1=5000$ W/m$^3$. Los pivotes verifican $u_i=(i+1)/i$.}}{4}{table.caption.4}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:gt}{{1}{4}{Factorización LU tridiagonal ($l_i$, $u_i$) y eliminación de Gauss ($\vect c$, $\vect T$) para $N=6$ y $q_1=5000$ W/m$^3$. Los pivotes verifican $u_i=(i+1)/i$}{table.caption.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Descomposición LU tridiagonal (algoritmo de Thomas).}{4}{section*.5}\protected@file@percent }
+\newlabel{eq:thomasLU}{{7}{4}{Descomposición LU tridiagonal (algoritmo de Thomas)}{equation.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Temperaturas nodales [$^\circ $C] para $N=6$: solución numérica (Thomas) frente a la solución analítica.}}{5}{table.caption.6}\protected@file@percent }
+\newlabel{tab:T}{{2}{5}{Temperaturas nodales [$^\circ $C] para $N=6$: solución numérica (Thomas) frente a la solución analítica}{table.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Izquierda: los tres perfiles de fuente. Derecha: temperatura numérica (puntos) y analítica (líneas) para $N=6$.}}{5}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:perfiles}{{1}{5}{Izquierda: los tres perfiles de fuente. Derecha: temperatura numérica (puntos) y analítica (líneas) para $N=6$}{figure.caption.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Error máximo nodal para el perfil $q_3$ en función del número de nodos, y orden de convergencia observado.}}{6}{table.caption.8}\protected@file@percent }
+\newlabel{tab:malla}{{3}{6}{Error máximo nodal para el perfil $q_3$ en función del número de nodos, y orden de convergencia observado}{table.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Izquierda: tiempo de cálculo frente a $N$ (Gauss crece como $N^3$, Thomas como $N$). Centro: convergencia de la discretización para $q_3$. Derecha: errores para $N=6$ (escala logarítmica).}}{6}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:coste}{{2}{6}{Izquierda: tiempo de cálculo frente a $N$ (Gauss crece como $N^3$, Thomas como $N$). Centro: convergencia de la discretización para $q_3$. Derecha: errores para $N=6$ (escala logarítmica)}{figure.caption.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Tiempos medidos (Python puro, un solo sistema $q_3$).}}{6}{table.caption.10}\protected@file@percent }
+\newlabel{tab:coste}{{4}{6}{Tiempos medidos (Python puro, un solo sistema $q_3$)}{table.caption.10}{}}
+\@writefile{toc}{\contentsline {paragraph}{Inversa de $A$ y función de Green discreta.}{6}{section*.11}\protected@file@percent }
+\newlabel{eq:green}{{11}{7}{Inversa de $A$ y función de Green discreta}{equation.11}{}}
+\newlabel{eq:superp}{{12}{7}{Inversa de $A$ y función de Green discreta}{equation.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Izquierda: $A^{-1}$ para $N=6$. Derecha: cada columna es la respuesta de la barra a una fuente puntual unitaria en el nodo $j$ (función de Green discreta).}}{8}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:inversa}{{3}{8}{Izquierda: $\Ainv $ para $N=6$. Derecha: cada columna es la respuesta de la barra a una fuente puntual unitaria en el nodo $j$ (función de Green discreta)}{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Problema 2: modos normales de vibración en cadenas acopladas}{8}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Planteamiento y problema de eigenvalores.}{8}{section*.13}\protected@file@percent }
+\newlabel{eq:A}{{13}{8}{Planteamiento y problema de eigenvalores}{equation.13}{}}
+\@writefile{toc}{\contentsline {paragraph}{Método de Jacobi (rotaciones).}{8}{section*.14}\protected@file@percent }
+\newlabel{eq:jacobi}{{14}{9}{Método de Jacobi (rotaciones)}{equation.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Norma de Frobenius de la parte fuera de la diagonal tras cada barrido de Jacobi.}}{9}{table.caption.15}\protected@file@percent }
+\newlabel{tab:jh}{{5}{9}{Norma de Frobenius de la parte fuera de la diagonal tras cada barrido de Jacobi}{table.caption.15}{}}
+\@writefile{toc}{\contentsline {paragraph}{Resultados: frecuencias naturales y eigenvectores.}{9}{section*.16}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Eigenvalores y frecuencias naturales de la cadena de cuatro masas (Jacobi), comparados con la fórmula analítica.}}{9}{table.caption.17}\protected@file@percent }
+\newlabel{tab:modos}{{6}{9}{Eigenvalores y frecuencias naturales de la cadena de cuatro masas (Jacobi), comparados con la fórmula analítica}{table.caption.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Eigenvectores normalizados del método de Jacobi ($v_{j,i}$: componente de la masa $i$ en el modo $j$).}}{10}{table.caption.18}\protected@file@percent }
+\newlabel{tab:vec}{{7}{10}{Eigenvectores normalizados del método de Jacobi ($v_{j,i}$: componente de la masa $i$ en el modo $j$)}{table.caption.18}{}}
+\newlabel{eq:analitico}{{15}{10}{Resultados: frecuencias naturales y eigenvectores}{equation.15}{}}
+\@writefile{toc}{\contentsline {paragraph}{Método de la potencia con deflación.}{10}{section*.19}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Potencia con deflación frente a Jacobi (tolerancia relativa $10^{-13}$).}}{10}{table.caption.20}\protected@file@percent }
+\newlabel{tab:pot}{{8}{10}{Potencia con deflación frente a Jacobi (tolerancia relativa $10^{-13}$)}{table.caption.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Izquierda: convergencia de Jacobi. Centro: error del eigenvalor en la potencia con deflación (semilog). Derecha: espectro de frecuencias.}}{11}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:p2conv}{{4}{11}{Izquierda: convergencia de Jacobi. Centro: error del eigenvalor en la potencia con deflación (semilog). Derecha: espectro de frecuencias}{figure.caption.21}{}}
+\@writefile{toc}{\contentsline {paragraph}{Perfiles espaciales de los modos normales.}{11}{section*.22}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Perfiles espaciales de los cuatro modos normales.}}{12}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:modos}{{5}{12}{Perfiles espaciales de los cuatro modos normales}{figure.caption.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Movimiento de las cuatro masas cuando solo la masa 1 se desplaza en $t=0$, reconstruido con los modos calculados.}}{12}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:dinamica}{{6}{12}{Movimiento de las cuatro masas cuando solo la masa 1 se desplaza en $t=0$, reconstruido con los modos calculados}{figure.caption.24}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Problema 3: ecuación de Kepler y dinámica orbital}{12}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Planteamiento.}{12}{section*.25}\protected@file@percent }
+\newlabel{eq:kepler}{{16}{13}{Planteamiento}{equation.16}{}}
+\@writefile{toc}{\contentsline {paragraph}{Método de relajación (punto fijo) y análisis de convergencia.}{13}{section*.26}\protected@file@percent }
+\newlabel{eq:contraccion}{{17}{13}{Método de relajación (punto fijo) y análisis de convergencia}{equation.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Relajación para $e=0.1$, $M=1.5$ rad ($E^*=1.599957$).}}{13}{table.caption.27}\protected@file@percent }
+\newlabel{tab:rel01}{{9}{13}{Relajación para $e=0.1$, $M=1.5$ rad ($E^*=1.599957$)}{table.caption.27}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Relajación para $e=0.92$, $M=1.5$ rad ($E^*=2.228235$).}}{14}{table.caption.28}\protected@file@percent }
+\newlabel{tab:rel092}{{10}{14}{Relajación para $e=0.92$, $M=1.5$ rad ($E^*=2.228235$)}{table.caption.28}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Diagrama de telaraña de la iteración $E_{k+1}=M+e\sin E_k$. Con $e=0.1$ la curva $g$ es casi plana y la iteración cae de inmediato sobre la raíz; con $e=0.92$ la pendiente en el punto fijo es mayor y la iteración espirala lentamente.}}{14}{figure.caption.29}\protected@file@percent }
+\newlabel{fig:tela}{{7}{14}{Diagrama de telaraña de la iteración $E_{k+1}=M+e\sin E_k$. Con $e=0.1$ la curva $g$ es casi plana y la iteración cae de inmediato sobre la raíz; con $e=0.92$ la pendiente en el punto fijo es mayor y la iteración espirala lentamente}{figure.caption.29}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Error $|E_k-E^*|$ frente a la iteración (escala semilogarítmica). Izquierda: $M=1.5$ rad, relajación (círculos) y bisección (cuadrados). Derecha: caso desfavorable $M=0.1$, $e=0.92$, con la recta teórica $\rho ^k$.}}{15}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:p3err}{{8}{15}{Error $|E_k-E^*|$ frente a la iteración (escala semilogarítmica). Izquierda: $M=1.5$ rad, relajación (círculos) y bisección (cuadrados). Derecha: caso desfavorable $M=0.1$, $e=0.92$, con la recta teórica $\rho ^k$}{figure.caption.30}{}}
+\@writefile{toc}{\contentsline {paragraph}{Búsqueda binaria (bisección) y comparación.}{15}{section*.31}\protected@file@percent }
+\newlabel{eq:biseccion}{{18}{15}{Búsqueda binaria (bisección) y comparación}{equation.18}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Bisección, $e=0.1$.}}{15}{table.caption.32}\protected@file@percent }
+\newlabel{tab:bis01}{{11}{15}{Bisección, $e=0.1$}{table.caption.32}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Bisección, $e=0.92$.}}{15}{table.caption.32}\protected@file@percent }
+\newlabel{tab:bis092}{{12}{15}{Bisección, $e=0.92$}{table.caption.32}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Izquierda: iteraciones necesarias para $\varepsilon =10^{-6}$ en función de $e$. Derecha: factor de contracción $|g'(E^*)|$, siempre por debajo de la cota $e$.}}{16}{figure.caption.33}\protected@file@percent }
+\newlabel{fig:p3it}{{9}{16}{Izquierda: iteraciones necesarias para $\varepsilon =10^{-6}$ en función de $e$. Derecha: factor de contracción $|g'(E^*)|$, siempre por debajo de la cota $e$}{figure.caption.33}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Iteraciones de cada método para distintas excentricidades y anomalías medias.}}{16}{table.caption.34}\protected@file@percent }
+\newlabel{tab:p3it}{{13}{16}{Iteraciones de cada método para distintas excentricidades y anomalías medias}{table.caption.34}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Posición del cuerpo para $M=1.5$ rad en las dos órbitas (el Sol está en el foco, en el origen).}}{17}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:orbita}{{10}{17}{Posición del cuerpo para $M=1.5$ rad en las dos órbitas (el Sol está en el foco, en el origen)}{figure.caption.35}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Problema 4: termodinámica real y sistemas no lineales multivariables}{17}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Parte A: volumen molar de un gas de Van der Waals.}{17}{section*.36}\protected@file@percent }
+\newlabel{eq:vdw}{{19}{17}{Parte A: volumen molar de un gas de Van der Waals}{equation.19}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Error absoluto $e_k=|v_k-v^*|$ para Newton y secante (aritmética de 80 dígitos).}}{18}{table.caption.37}\protected@file@percent }
+\newlabel{tab:ns}{{14}{18}{Error absoluto $e_k=|v_k-v^*|$ para Newton y secante (aritmética de 80 dígitos)}{table.caption.37}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Constante asintótica y orden de convergencia estimado con~\eqref  {eq:orden}.}}{18}{table.caption.38}\protected@file@percent }
+\newlabel{tab:orden}{{15}{18}{Constante asintótica y orden de convergencia estimado con~\eqref {eq:orden}}{table.caption.38}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Izquierda: isoterma de Van der Waals a 300 K frente a la ideal; el punto rojo es $v^*$. Centro: $f(v)$ con su cero. Derecha: error absoluto frente a la iteración.}}{19}{figure.caption.39}\protected@file@percent }
+\newlabel{fig:vdw}{{11}{19}{Izquierda: isoterma de Van der Waals a 300 K frente a la ideal; el punto rojo es $v^*$. Centro: $f(v)$ con su cero. Derecha: error absoluto frente a la iteración}{figure.caption.39}{}}
+\@writefile{toc}{\contentsline {paragraph}{Parte B: sistema no lineal $2\times 2$.}{19}{section*.40}\protected@file@percent }
+\newlabel{eq:sis2d}{{20}{19}{Parte B: sistema no lineal $2\times 2$}{equation.20}{}}
+\newlabel{eq:rel2d}{{21}{20}{Parte B: sistema no lineal $2\times 2$}{equation.21}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Relajación de dos variables ($\theta =0$, $\omega =0.2$) desde $(1.4,\,0.4)$. La distancia a la raíz se reduce por un factor $\approx 0.4$ en cada iteración.}}{20}{table.caption.41}\protected@file@percent }
+\newlabel{tab:rel2d}{{16}{20}{Relajación de dos variables ($\theta =0$, $\omega =0.2$) desde $(1.4,\,0.4)$. La distancia a la raíz se reduce por un factor $\approx 0.4$ en cada iteración}{table.caption.41}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Radio espectral de la relajación (izquierda) e iteraciones necesarias (derecha) frente al parámetro de relajación $\omega $.}}{21}{figure.caption.42}\protected@file@percent }
+\newlabel{fig:omega}{{12}{21}{Radio espectral de la relajación (izquierda) e iteraciones necesarias (derecha) frente al parámetro de relajación $\omega $}{figure.caption.42}{}}
+\newlabel{eq:newton2d}{{22}{21}{Parte B: sistema no lineal $2\times 2$}{equation.22}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces Newton de dos variables desde $(1.4,\,0.4)$: $e_k$ es la distancia euclídea a la raíz $(1,0)$.}}{21}{table.caption.43}\protected@file@percent }
+\newlabel{tab:n2d}{{17}{21}{Newton de dos variables desde $(1.4,\,0.4)$: $e_k$ es la distancia euclídea a la raíz $(1,0)$}{table.caption.43}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Newton de dos variables desde distintas semillas.}}{22}{table.caption.44}\protected@file@percent }
+\newlabel{tab:n2do}{{18}{22}{Newton de dos variables desde distintas semillas}{table.caption.44}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Izquierda: curvas $f_1=0$ (azul) y $f_2=0$ (rojo) con las tres raíces. Centro: trayectorias de Newton y de la relajación en el plano $(x,y)$. Derecha: error frente a la iteración en escala semilogarítmica.}}{22}{figure.caption.45}\protected@file@percent }
+\newlabel{fig:sis2d}{{13}{22}{Izquierda: curvas $f_1=0$ (azul) y $f_2=0$ (rojo) con las tres raíces. Centro: trayectorias de Newton y de la relajación en el plano $(x,y)$. Derecha: error frente a la iteración en escala semilogarítmica}{figure.caption.45}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Cuencas de atracción de las tres raíces para el método de Newton de dos variables.}}{23}{figure.caption.46}\protected@file@percent }
+\newlabel{fig:cuencas}{{14}{23}{Cuencas de atracción de las tres raíces para el método de Newton de dos variables}{figure.caption.46}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusiones}{23}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Código del módulo \texttt  {metodos.py}}{23}{appendix.A}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{metodos.py}{24}{lstlisting.-1}\protected@file@percent }
+\gdef \@abspage@last{29}

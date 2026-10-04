@@ -1,0 +1,21 @@
+\contentsline {section}{\numberline {1}Introducción, alcance y metodología}{2}{section.1}%
+\contentsline {section}{\numberline {2}Problema 1: perfil estacionario de temperatura en una barra 1D}{2}{section.2}%
+\contentsline {paragraph}{Deducción del sistema lineal.}{2}{section*.2}%
+\contentsline {paragraph}{Eliminación de Gauss con pivoteo parcial y sustitución inversa.}{3}{section*.3}%
+\contentsline {paragraph}{Descomposición LU tridiagonal (algoritmo de Thomas).}{4}{section*.5}%
+\contentsline {paragraph}{Inversa de $A$ y función de Green discreta.}{6}{section*.11}%
+\contentsline {section}{\numberline {3}Problema 2: modos normales de vibración en cadenas acopladas}{8}{section.3}%
+\contentsline {paragraph}{Planteamiento y problema de eigenvalores.}{8}{section*.13}%
+\contentsline {paragraph}{Método de Jacobi (rotaciones).}{8}{section*.14}%
+\contentsline {paragraph}{Resultados: frecuencias naturales y eigenvectores.}{9}{section*.16}%
+\contentsline {paragraph}{Método de la potencia con deflación.}{10}{section*.19}%
+\contentsline {paragraph}{Perfiles espaciales de los modos normales.}{11}{section*.22}%
+\contentsline {section}{\numberline {4}Problema 3: ecuación de Kepler y dinámica orbital}{12}{section.4}%
+\contentsline {paragraph}{Planteamiento.}{12}{section*.25}%
+\contentsline {paragraph}{Método de relajación (punto fijo) y análisis de convergencia.}{13}{section*.26}%
+\contentsline {paragraph}{Búsqueda binaria (bisección) y comparación.}{15}{section*.31}%
+\contentsline {section}{\numberline {5}Problema 4: termodinámica real y sistemas no lineales multivariables}{17}{section.5}%
+\contentsline {paragraph}{Parte A: volumen molar de un gas de Van der Waals.}{17}{section*.36}%
+\contentsline {paragraph}{Parte B: sistema no lineal $2\times 2$.}{19}{section*.40}%
+\contentsline {section}{\numberline {6}Conclusiones}{23}{section.6}%
+\contentsline {section}{\numberline {A}Código del módulo \texttt {metodos.py}}{23}{appendix.A}%

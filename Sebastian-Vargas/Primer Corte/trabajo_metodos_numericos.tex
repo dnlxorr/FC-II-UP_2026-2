@@ -1,0 +1,1622 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\IfFileExists{spanish.ldf}{%
+  \usepackage[spanish,es-tabla]{babel}%
+}{%
+  \renewcommand{\contentsname}{Índice}%
+}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue!40!black,urlcolor=blue!40!black]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\headheight}{14pt}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=5pt}
+\setlist[itemize]{leftmargin=1.6em,itemsep=3pt}
+\captionsetup{font=small,labelfont=bf}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Universidad de Pamplona}
+\rhead{Física Computacional II}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{blue!55!black},
+  commentstyle=\color{green!35!black},
+  stringstyle=\color{red!55!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  tabsize=4,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {°}{{$^\circ$}}1
+}
+
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\norma}[1]{\left\lVert #1 \right\rVert}
+
+\begin{document}
+
+\begin{center}
+  {\Large\bfseries UNIVERSIDAD DE PAMPLONA}\\[4pt]
+  {\large FACULTAD DE CIENCIAS BÁSICAS --- DEPARTAMENTO DE FÍSICA}\\[9pt]
+  {\LARGE\bfseries FÍSICA COMPUTACIONAL II}\\[8pt]
+  {\Large\bfseries Taller Práctico: Soluciones Numéricas Lineales y No Lineales\\
+  en Sistemas Físicos}\\[10pt]
+  {\large Sebastián Vargas Contreras}
+\end{center}
+
+\vspace{3pt}
+\noindent\rule{\textwidth}{0.6pt}
+
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Unidad 1: Soluciones Numéricas de Ecuaciones Lineales y Análisis Espectral}
+%=====================================================================
+
+%=====================================================================
+\subsection{Problema 1: Perfil de Temperatura Estacionario en una Barra 1D}
+%=====================================================================
+
+\subsubsection*{Enunciado}
+
+Considere una barra metálica delgada de longitud $L=1.0$ m y conductividad térmica $k=45$ W/(m$\cdot$K). La temperatura estacionaria $T(x)$, con una fuente interna de calor $q(x)$, obedece
+\begin{equation}
+-
+\frac{\dd^2T}{\dd x^2}=\frac{q(x)}{k},
+\qquad
+T(0)=T_A=100\,^{\circ}\mathrm C,
+\qquad
+T(L)=T_B=20\,^{\circ}\mathrm C.
+\end{equation}
+
+Al discretizar en $N$ nodos internos, con
+\[
+\Delta x=\frac{L}{N+1},
+\qquad x_i=i\Delta x,
+\qquad i=1,2,\ldots,N,
+\]
+se obtiene
+\begin{equation}
+-T_{i-1}+2T_i-T_{i+1}=\frac{\Delta x^2}{k}q(x_i).
+\end{equation}
+
+Se pide: construir el sistema para $N=6$ y $q=5000$ W/m$^3$; resolverlo por eliminación de Gauss con pivoteo parcial; implementar la factorización LU tridiagonal o algoritmo de Thomas para tres fuentes; y calcular $A^{-1}$ resolviendo seis sistemas con los vectores de la identidad.
+
+\subsubsection*{1. Discretización y construcción del sistema}
+
+Aquí
+\[
+L=1,\qquad N=6,
+\]
+por lo tanto
+\begin{equation}
+\Delta x=\frac{1}{7}=0.1428571429\ \mathrm m.
+\end{equation}
+
+Para una fuente uniforme $q=5000$ W/m$^3$,
+\begin{equation}
+\frac{\Delta x^2}{k}q
+=\frac{1}{49}\frac{5000}{45}
+=\frac{5000}{2205}
+=2.267573696.
+\end{equation}
+
+Los nodos internos son
+\[
+x_1=0.142857,
+\ x_2=0.285714,
+\ x_3=0.428571,
+\ x_4=0.571429,
+\ x_5=0.714286,
+\ x_6=0.857143\ \mathrm m.
+\]
+
+Para $i=1$ aparece la temperatura conocida $T_0=T_A=100\,^{\circ}$C:
+\begin{align}
+-T_0+2T_1-T_2&=2.267573696,\\
+-100+2T_1-T_2&=2.267573696,
+\end{align}
+por lo que
+\[
+2T_1-T_2=102.267573696.
+\]
+
+Para los cuatro nodos interiores siguientes no entra ninguna temperatura de frontera:
+\begin{align}
+-T_1+2T_2-T_3&=2.267573696,\\
+-T_2+2T_3-T_4&=2.267573696,\\
+-T_3+2T_4-T_5&=2.267573696,\\
+-T_4+2T_5-T_6&=2.267573696.
+\end{align}
+
+Finalmente, en $i=6$ aparece $T_7=T_B=20\,^{\circ}$C:
+\begin{align}
+-T_5+2T_6-T_7&=2.267573696,\\
+-T_5+2T_6&=22.267573696.
+\end{align}
+
+Por tanto,
+\begin{equation}
+\boxed{
+\begin{pmatrix}
+2&-1&0&0&0&0\\
+-1&2&-1&0&0&0\\
+0&-1&2&-1&0&0\\
+0&0&-1&2&-1&0\\
+0&0&0&-1&2&-1\\
+0&0&0&0&-1&2
+\end{pmatrix}
+\begin{pmatrix}T_1\\T_2\\T_3\\T_4\\T_5\\T_6\end{pmatrix}
+=
+\begin{pmatrix}
+102.267573696\\
+2.267573696\\
+2.267573696\\
+2.267573696\\
+2.267573696\\
+22.267573696
+\end{pmatrix}}
+\end{equation}
+
+La matriz es tridiagonal porque solamente hay elementos en la diagonal principal y en las dos diagonales vecinas. Su semiancho de banda es 1.
+
+\subsubsection*{2. Eliminación de Gauss con pivoteo parcial}
+
+La idea es transformar el sistema en uno triangular superior. Para la primera columna, el mayor valor absoluto entre las filas 1 a 6 es $2$, así que el pivote ya está en la posición correcta y no hace falta intercambiar filas.
+
+El primer multiplicador es
+\[
+m_{21}=\frac{-1}{2}=-\frac12.
+\]
+Entonces
+\[
+F_2\leftarrow F_2-m_{21}F_1=F_2+\frac12F_1.
+\]
+El resultado para la segunda fila es
+\[
+\left[0,\frac32,-1,0,0,0\,\middle|\,53.401360544\right].
+\]
+
+En la siguiente columna,
+\[
+m_{32}=\frac{-1}{3/2}=-\frac23,
+\]
+por lo que
+\[
+F_3\leftarrow F_3+\frac23F_2.
+\]
+Se obtiene
+\[
+\left[0,0,\frac43,-1,0,0\,\middle|\,37.868480726\right].
+\]
+
+Los multiplicadores restantes son
+\[
+m_{43}=-\frac34,\qquad
+m_{54}=-\frac45,\qquad
+m_{65}=-\frac56.
+\]
+Después de realizar todas las eliminaciones, queda
+\begin{equation}
+\begin{pmatrix}
+2&-1&0&0&0&0\\
+0&\frac32&-1&0&0&0\\
+0&0&\frac43&-1&0&0\\
+0&0&0&\frac54&-1&0\\
+0&0&0&0&\frac65&-1\\
+0&0&0&0&0&\frac76
+\end{pmatrix}
+\begin{pmatrix}T_1\\T_2\\T_3\\T_4\\T_5\\T_6\end{pmatrix}
+=
+\begin{pmatrix}
+102.267573696\\
+53.401360544\\
+37.868480726\\
+30.668934240\\
+26.802721088\\
+44.603174603
+\end{pmatrix}.
+\end{equation}
+
+Ahora se hace la sustitución inversa comenzando por la última ecuación.
+
+Para $T_6$:
+\[
+\frac76T_6=44.603174603,
+\]
+por lo tanto
+\[
+T_6=38.231292517\,^{\circ}\mathrm C.
+\]
+
+Para $T_5$:
+\[
+\frac65T_5-T_6=26.802721088,
+\]
+\[
+T_5=\frac{26.802721088+38.231292517}{1.2}
+=54.195011338\,^{\circ}\mathrm C.
+\]
+
+Para $T_4$:
+\[
+\frac54T_4-T_5=30.668934240,
+\]
+\[
+T_4=\frac{30.668934240+54.195011338}{1.25}
+=67.891156463\,^{\circ}\mathrm C.
+\]
+
+Para $T_3$:
+\[
+\frac43T_3-T_4=37.868480726,
+\]
+\[
+T_3=\frac{37.868480726+67.891156463}{4/3}
+=79.319727891\,^{\circ}\mathrm C.
+\]
+
+Para $T_2$:
+\[
+\frac32T_2-T_3=53.401360544,
+\]
+\[
+T_2=\frac{53.401360544+79.319727891}{1.5}
+=88.480725624\,^{\circ}\mathrm C.
+\]
+
+Finalmente,
+\[
+2T_1-T_2=102.267573696,
+\]
+\[
+T_1=\frac{102.267573696+88.480725624}{2}
+=95.374149660\,^{\circ}\mathrm C.
+\]
+
+La solución completa es
+\begin{equation}
+\boxed{
+\mathbf T=
+\begin{pmatrix}
+95.374149660\\
+88.480725624\\
+79.319727891\\
+67.891156463\\
+54.195011338\\
+38.231292517
+\end{pmatrix}\,^{\circ}\mathrm C.}
+\end{equation}
+
+Como comprobación, para $q$ constante la solución analítica se obtiene integrando dos veces:
+\[
+T''(x)=-\frac{q}{k}.
+\]
+Por tanto,
+\[
+T(x)=-\frac{q}{2k}x^2+C_1x+C_2.
+\]
+Con $T(0)=T_A$ se obtiene $C_2=T_A$. Con $T(L)=T_B$:
+\[
+T_B=-\frac{qL^2}{2k}+C_1L+T_A,
+\]
+\[
+C_1=\frac{T_B-T_A}{L}+\frac{qL}{2k}.
+\]
+Así,
+\begin{equation}
+\boxed{T(x)=T_A+\frac{T_B-T_A}{L}x+\frac{q}{2k}x(L-x).}
+\end{equation}
+
+Al evaluar esta expresión en los seis nodos se obtiene la misma solución, salvo diferencias de redondeo del orden de $10^{-14}\ ^\circ$C.
+
+\begin{table}[H]
+\centering
+\caption{Temperaturas obtenidas por Gauss y comparación con la solución analítica para la fuente uniforme.}
+\begin{tabular}{cccc}
+\toprule
+$i$ & $x_i$ [m] & $T_i$ [${}^{\circ}$C] & $|T_i-T(x_i)|$ \\
+\midrule
+1&0.142857&95.374150&$0$\\
+2&0.285714&88.480726&$0$\\
+3&0.428571&79.319728&$2.8\times10^{-14}$\\
+4&0.571429&67.891156&$1.4\times10^{-14}$\\
+5&0.714286&54.195011&$0$\\
+6&0.857143&38.231293&$0$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{3. Matriz tridiagonal y algoritmo de Thomas}
+
+Para una matriz tridiagonal general escribimos
+\begin{equation}
+A=
+\begin{pmatrix}
+ d_1&c_1&0&\cdots&0\\
+ a_2&d_2&c_2&\ddots&\vdots\\
+ 0&a_3&d_3&\ddots&0\\
+ \vdots&\ddots&\ddots&\ddots&c_{N-1}\\
+ 0&\cdots&0&a_N&d_N
+\end{pmatrix}.
+\end{equation}
+
+El algoritmo de Thomas consiste en hacer la factorización $A=LU$, donde
+\[
+L=
+\begin{pmatrix}
+1&0&\cdots&0\\
+\ell_2&1&\ddots&\vdots\\
+0&\ell_3&\ddots&0\\
+\vdots&\ddots&\ddots&1
+\end{pmatrix}
+\]
+y
+\[
+U=
+\begin{pmatrix}
+ u_1&c_1&0&\cdots&0\\
+ 0&u_2&c_2&\ddots&\vdots\\
+ \vdots&\ddots&\ddots&\ddots&0\\
+ 0&\cdots&0&u_{N-1}&c_{N-1}\\
+ 0&\cdots&\cdots&0&u_N
+\end{pmatrix}.
+\]
+
+Al multiplicar $LU$ e igualar los elementos se obtiene, paso a paso,
+\begin{align}
+ u_1&=d_1,\\
+ \ell_i&=\frac{a_i}{u_{i-1}},\\
+ u_i&=d_i-\ell_i c_{i-1},
+\qquad i=2,\ldots,N.
+\end{align}
+
+Para nuestra matriz,
+\[
+a_i=-1,\qquad d_i=2,\qquad c_i=-1.
+\]
+Entonces
+\[
+u_1=2,
+\]
+\[
+\ell_2=\frac{-1}{2}=-\frac12,
+\qquad
+u_2=2-\left(-\frac12\right)(-1)=\frac32,
+\]
+\[
+\ell_3=\frac{-1}{3/2}=-\frac23,
+\qquad
+u_3=2-\left(-\frac23\right)(-1)=\frac43,
+\]
+\[
+\ell_4=-\frac34,
+\qquad u_4=\frac54,
+\]
+\[
+\ell_5=-\frac45,
+\qquad u_5=\frac65,
+\]
+\[
+\ell_6=-\frac56,
+\qquad u_6=\frac76.
+\]
+
+La factorización es, por tanto,
+\begin{equation}
+\boxed{
+\ell_2=-\frac12,\quad
+\ell_3=-\frac23,\quad
+\ell_4=-\frac34,\quad
+\ell_5=-\frac45,\quad
+\ell_6=-\frac56
+}
+\end{equation}
+y
+\begin{equation}
+\boxed{
+(u_1,u_2,u_3,u_4,u_5,u_6)=
+\left(2,\frac32,\frac43,\frac54,\frac65,\frac76\right).}
+\end{equation}
+
+Una vez obtenida la factorización, se resuelve primero $L\mathbf y=\mathbf b$:
+\begin{align}
+y_1&=b_1,\\
+y_i&=b_i-\ell_i y_{i-1}.
+\end{align}
+Luego se resuelve $U\mathbf T=\mathbf y$:
+\begin{align}
+T_N&=\frac{y_N}{u_N},\\
+T_i&=\frac{y_i-c_iT_{i+1}}{u_i}.
+\end{align}
+
+Para la fuente uniforme de la actividad anterior, el vector $\mathbf y$ resulta
+\[
+\mathbf y=
+\begin{pmatrix}
+102.267573696\\
+53.401360544\\
+37.868480726\\
+30.668934240\\
+26.802721088\\
+44.603174603
+\end{pmatrix},
+\]
+que coincide con el lado derecho obtenido por la eliminación de Gauss.
+
+\paragraph{Ventaja de la factorización.}
+
+Los tres perfiles del taller tienen la misma matriz $A$, porque solamente cambia el lado derecho. Por eso $L$ y $U$ se calculan una sola vez y se reutilizan.
+
+\subsubsection*{4. Tres perfiles de fuente}
+
+\paragraph{Fuente 1.}
+\[
+q_1(x)=5000.
+\]
+La solución analítica es la que ya se obtuvo:
+\[
+T_1(x)=100-80x+\frac{5000}{90}x(1-x).
+\]
+
+\paragraph{Fuente 2.}
+\[
+q_2(x)=10000\frac{x}{L}=10000x,
+\]
+porque $L=1$ m. La ecuación diferencial es
+\[
+T''(x)=-\frac{10000}{45}x.
+\]
+Integrando:
+\[
+T'(x)=-\frac{10000}{90}x^2+C_1,
+\]
+\[
+T(x)=-\frac{10000}{270}x^3+C_1x+C_2.
+\]
+De $T(0)=100$ se obtiene $C_2=100$. De $T(1)=20$:
+\[
+20=-\frac{10000}{270}+C_1+100,
+\]
+por lo que
+\[
+C_1=-80+\frac{10000}{270}.
+\]
+Entonces
+\begin{equation}
+\boxed{T_2(x)=100+\left(-80+\frac{10000}{270}\right)x-\frac{10000}{270}x^3.}
+\end{equation}
+
+\paragraph{Fuente 3.}
+\[
+q_3(x)=8000\sin(\pi x/L)=8000\sin(\pi x).
+\]
+Entonces
+\[
+T''(x)=-\frac{8000}{45}\sin(\pi x).
+\]
+Una particular es
+\[
+T_p(x)=\frac{8000}{45\pi^2}\sin(\pi x),
+\]
+por lo que
+\begin{equation}
+\boxed{T_3(x)=100-80x+\frac{8000}{45\pi^2}\sin(\pi x).}
+\end{equation}
+
+Aplicando Thomas a los tres lados derechos se obtienen:
+\begin{table}[H]
+\centering
+\caption{Temperaturas nodales obtenidas con Thomas.}
+\begin{tabular}{c|ccc}
+\toprule
+$x_i$ [m] & $q_1$ & $q_2$ & $q_3$ \\
+\midrule
+0.142857 & 95.374150 & 93.754454 & 96.519340\\
+0.285714 & 88.480726 & 86.861030 & 91.464499\\
+0.428571 & 79.319728 & 78.671850 & 83.573081\\
+0.571429 & 67.891156 & 68.539035 & 72.144510\\
+0.714286 & 54.195011 & 55.814707 & 57.178785\\
+0.857143 & 38.231293 & 39.850988 & 39.376483\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Los errores máximos contra las soluciones analíticas son
+\[
+E_1=2.8\times10^{-14}\,^{\circ}\mathrm C,
+\qquad
+E_2=1.4\times10^{-14}\,^{\circ}\mathrm C,
+\qquad
+E_3=2.98\times10^{-1}\,^{\circ}\mathrm C.
+\]
+
+Para las dos primeras fuentes, $T(x)$ es un polinomio de grado menor o igual que 3. La diferencia central de segundo orden es exacta para polinomios hasta grado 3, por eso no aparece prácticamente error de discretización. En la fuente sinusoidal sí aparece el error esperado de la malla.
+
+La figura siguiente compara las soluciones nodales con las curvas analíticas.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{figuras/p1_perfiles.png}
+\caption{Perfiles de temperatura para las tres fuentes.}
+\end{figure}
+
+\subsubsection*{5. Inversa de $A$ y respuesta del sistema}
+
+Para calcular $A^{-1}$ sin una fórmula predeterminada se resuelven seis sistemas:
+\begin{align}
+A\mathbf x^{(1)}&=\mathbf e_1,\\
+A\mathbf x^{(2)}&=\mathbf e_2,\\
+A\mathbf x^{(3)}&=\mathbf e_3,\\
+A\mathbf x^{(4)}&=\mathbf e_4,\\
+A\mathbf x^{(5)}&=\mathbf e_5,\\
+A\mathbf x^{(6)}&=\mathbf e_6.
+\end{align}
+
+Cada solución es una columna de $A^{-1}$. El resultado es
+\begin{equation}
+\boxed{
+A^{-1}=\frac17
+\begin{pmatrix}
+6&5&4&3&2&1\\
+5&10&8&6&4&2\\
+4&8&12&9&6&3\\
+3&6&9&12&8&4\\
+2&4&6&8&10&5\\
+1&2&3&4&5&6
+\end{pmatrix}.}
+\end{equation}
+
+En decimal,
+\[
+A^{-1}\approx
+\begin{pmatrix}
+0.857143&0.714286&0.571429&0.428571&0.285714&0.142857\\
+0.714286&1.428571&1.142857&0.857143&0.571429&0.285714\\
+0.571429&1.142857&1.714286&1.285714&0.857143&0.428571\\
+0.428571&0.857143&1.285714&1.714286&1.142857&0.571429\\
+0.285714&0.571429&0.857143&1.142857&1.428571&0.714286\\
+0.142857&0.285714&0.428571&0.571429&0.714286&0.857143
+\end{pmatrix}.
+\]
+
+Como comprobación, $AA^{-1}$ da la identidad con un error máximo de aproximadamente $10^{-15}$ usando aritmética de doble precisión.
+
+La matriz inversa puede interpretarse como una matriz de respuesta. Si solamente el nodo $j$ recibe una fuente unitaria, la columna $j$ indica cómo cambia la temperatura en todos los nodos. Por ejemplo, la tercera columna es
+\[
+\begin{pmatrix}
+4/7\\8/7\\12/7\\9/7\\6/7\\3/7
+\end{pmatrix}.
+\]
+Esto muestra que una fuente interna afecta también a nodos alejados.
+
+La inversa es simétrica, $(A^{-1})_{ij}=(A^{-1})_{ji}$, y todos sus elementos son positivos. Además, los valores de la diagonal son mayores porque una fuente colocada en el centro está más lejos de las dos fronteras que actúan como temperaturas fijas.
+
+En la figura se muestran las columnas de la inversa.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{figuras/p1_inversa.png}
+\caption{Columnas de $A^{-1}$ como respuestas a fuentes concentradas en cada nodo.}
+\end{figure}
+
+\subsubsection*{6. Comparación del costo}
+
+Gauss trabaja con una matriz general y, en términos generales, su costo crece como $O(N^3)$. Thomas aprovecha que solamente existen tres diagonales y su costo es $O(N)$.
+
+Los tiempos del programa para este equipo fueron:
+\begin{table}[H]
+\centering
+\caption{Tiempos de cálculo. Los valores dependen del computador.}
+\begin{tabular}{ccc}
+\toprule
+$N$ & Gauss [s] & Thomas [s]\\
+\midrule
+50&0.00234&$2.17\times10^{-5}$\\
+100&0.01754&$2.75\times10^{-5}$\\
+200&0.13198&$5.84\times10^{-5}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\textwidth]{figuras/p1_costos.png}
+\caption{Comparación del crecimiento del tiempo de cálculo.}
+\end{figure}
+
+\subsubsection*{Conclusión del problema 1}
+
+El sistema térmico produce una matriz tridiagonal porque cada nodo solamente se conecta con sus vecinos inmediatos. Gauss funciona para esta matriz, pero Thomas es mucho más sencillo y rápido cuando la estructura tridiagonal se conserva. Además, la factorización de Thomas se puede reutilizar cuando cambia la fuente pero no cambia la matriz.
+
+%=====================================================================
+\subsection{Problema 2: Modos Normales de Vibración en Cadenas Acopladas}
+%=====================================================================
+
+\subsubsection*{Enunciado}
+
+Hay $N=4$ masas iguales de $m=0.5$ kg unidas mediante resortes de constante $k=200$ N/m y con las dos paredes exteriores fijas. Se pide construir la matriz dinámica, calcular sus eigenvalores y eigenvectores mediante el método de la potencia con deflación o las rotaciones de Jacobi, y obtener las frecuencias naturales
+\[
+\omega_i=\sqrt{\lambda_i}.
+\]
+
+\subsubsection*{1. Construcción de las ecuaciones}
+
+Sea $x_i$ el desplazamiento de la masa $i$. Para la primera masa actúan dos resortes, uno hacia la pared izquierda y otro hacia la masa 2:
+\[
+m\ddot x_1=-kx_1+k(x_2-x_1)
+=-2kx_1+kx_2.
+\]
+Por tanto,
+\[
+m\ddot x_1=-k(2x_1-x_2).
+\]
+
+Para las masas interiores:
+\begin{align}
+m\ddot x_2&=k(x_1-x_2)+k(x_3-x_2),\\
+m\ddot x_3&=k(x_2-x_3)+k(x_4-x_3),\\
+m\ddot x_4&=k(x_3-x_4)-kx_4.
+\end{align}
+
+Entonces
+\begin{equation}
+m\ddot{\mathbf x}=-K\mathbf x,
+\end{equation}
+con
+\begin{equation}
+K=k
+\begin{pmatrix}
+2&-1&0&0\\
+-1&2&-1&0\\
+0&-1&2&-1\\
+0&0&-1&2
+\end{pmatrix}.
+\end{equation}
+
+Como las masas son iguales,
+\[
+M=mI=0.5I.
+\]
+Buscamos una solución armónica
+\[
+\mathbf x(t)=\mathbf v\cos(\omega t).
+\]
+Entonces
+\[
+\ddot{\mathbf x}=-\omega^2\mathbf v\cos(\omega t),
+\]
+y al sustituir:
+\[
+-K\mathbf v\cos(\omega t)=-m\omega^2\mathbf v\cos(\omega t).
+\]
+Por tanto,
+\begin{equation}
+K\mathbf v=m\omega^2\mathbf v.
+\end{equation}
+
+Definimos
+\[
+\lambda=\omega^2.
+\]
+Como $k/m=200/0.5=400$ s$^{-2}$, la matriz que hay que diagonalizar es
+\begin{equation}
+\boxed{
+A=M^{-1}K=
+\begin{pmatrix}
+800&-400&0&0\\
+-400&800&-400&0\\
+0&-400&800&-400\\
+0&0&-400&800
+\end{pmatrix}.}
+\end{equation}
+
+Esto equivale a las cuatro ecuaciones
+\begin{align}
+800v_1-400v_2&=\lambda v_1,\\
+-400v_1+800v_2-400v_3&=\lambda v_2,\\
+-400v_2+800v_3-400v_4&=\lambda v_3,\\
+-400v_3+800v_4&=\lambda v_4.
+\end{align}
+
+\subsubsection*{2. Rotaciones de Jacobi}
+
+Como $A$ es simétrica, se puede usar una rotación plana para eliminar un elemento fuera de la diagonal. Para un par de índices $(p,q)$ se toma
+\begin{equation}
+\phi=\frac12\operatorname{atan2}(2a_{pq},a_{qq}-a_{pp}),
+\end{equation}
+\[
+c=\cos\phi,
+\qquad
+s=\sin\phi.
+\]
+La transformación es
+\[
+A_{\text{nuevo}}=R^TAR.
+\]
+Al mismo tiempo se acumula
+\[
+V_{\text{nuevo}}=VR,
+\]
+porque las columnas de $V$ terminan siendo los eigenvectores.
+
+En el primer paso podemos escoger el elemento $a_{12}=-400$. Como $a_{11}=a_{22}=800$,
+\[
+\phi=\frac12\operatorname{atan2}(-800,0)=-\frac\pi4,
+\]
+por lo que
+\[
+c=\frac{1}{\sqrt2},
+\qquad
+s=-\frac{1}{\sqrt2}.
+\]
+La rotación elimina el elemento $(1,2)$. El mismo procedimiento se repite para los pares
+\[
+(1,3),\ (1,4),\ (2,3),\ (2,4),\ (3,4),
+\]
+y después se vuelve a barrer la matriz hasta que los elementos fuera de la diagonal sean pequeños.
+
+El programa hizo cuatro barridos principales. La norma de los elementos fuera de la diagonal fue
+\begin{table}[H]
+\centering
+\caption{Disminución de los términos fuera de la diagonal durante Jacobi.}
+\begin{tabular}{cc}
+\toprule
+Barrido & Norma fuera de la diagonal\\
+\midrule
+0&$9.79796\times10^2$\\
+1&$3.02417\times10^2$\\
+2&$9.80026$\\
+3&$5.57151\times10^{-3}$\\
+4&$2.02\times10^{-14}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Al final, la diagonal contiene los eigenvalores. Ordenándolos de menor a mayor:
+\begin{equation}
+\boxed{
+\lambda_1=152.786404500,
+\quad
+\lambda_2=552.786404500,
+\quad
+\lambda_3=1047.213595500,
+\quad
+\lambda_4=1447.213595500.
+}
+\end{equation}
+
+Los eigenvectores normalizados obtenidos fueron, salvo signos globales que no cambian un eigenvector,
+\begin{equation}
+V\approx
+\begin{pmatrix}
+0.371748&-0.601501&0.601501&-0.371748\\
+0.601501&-0.371748&-0.371748&0.601501\\
+0.601501&0.371748&-0.371748&-0.601501\\
+0.371748&0.601501&0.601501&0.371748
+\end{pmatrix}.
+\end{equation}
+
+Cada columna corresponde a un modo. El signo completo de una columna puede cambiarse y representa el mismo modo físico.
+
+\subsubsection*{3. Método de la potencia con deflación}
+
+Para comprobar los resultados se utilizó también el método de la potencia. Se parte de un vector que no sea ortogonal al eigenvector dominante. Tomamos, por ejemplo,
+\[
+\mathbf v^{(0)}=(1,1,1,1).
+\]
+
+Se calcula
+\begin{equation}
+\mathbf w^{(k)}=A\mathbf v^{(k)},
+\qquad
+\mathbf v^{(k+1)}=\frac{\mathbf w^{(k)}}{\norma{\mathbf w^{(k)}}}.
+\end{equation}
+
+El eigenvalor se estima con el cociente de Rayleigh:
+\begin{equation}
+\lambda^{(k)}=\frac{(\mathbf v^{(k)})^TA\mathbf v^{(k)}}{(\mathbf v^{(k)})^T\mathbf v^{(k)}}.
+\end{equation}
+Como $\mathbf v$ se normaliza, el denominador vale 1.
+
+Las primeras iteraciones hacia el eigenvalor dominante son:
+\begin{table}[H]
+\centering
+\caption{Primeras iteraciones del método de la potencia.}
+\begin{tabular}{c|c|c}
+\toprule
+$k$ & $\mathbf v^{(k)}$ & $\lambda^{(k)}$\\
+\midrule
+0&$(1,1,1,1)$ normalizado&--\\
+1&$(0.707107,0,0,0.707107)$&800.000000\\
+2&$(0.632456,-0.316228,-0.316228,0.632456)$&1040.000000\\
+3&$(0.606339,-0.363803,-0.363803,0.606339)$&1047.058824\\
+4&$(0.602213,-0.370593,-0.370593,0.602213)$&1047.210300\\
+5&$(0.601605,-0.371580,-0.371580,0.601605)$&1047.213525\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Con el vector inicial utilizado en el programa, después de suficientes iteraciones la aproximación converge al eigenvalor dominante
+\[
+\lambda_4=1447.2135955\ \mathrm{s}^{-2}.
+\]
+En la tabla solo se muestran las primeras iteraciones, por lo que todavía no aparece el valor final. Después de encontrar este eigenpar se aplica la deflación para continuar con el siguiente.
+
+Para extraer los siguientes eigenvalores se usa la deflación
+\begin{equation}
+\boxed{A_{\text{nuevo}}=A-\lambda\mathbf v\mathbf v^T},
+\end{equation}
+que funciona directamente porque $A$ es simétrica y los eigenvectores pueden elegirse ortonormales.
+
+En el programa, el orden de extracción fue
+\[
+1447.2135955,
+\quad1047.2135955,
+\quad552.7864045,
+\quad152.7864045,
+\]
+con aproximadamente 59, 27, 16 y 2 iteraciones, respectivamente. Luego se ordenan de menor a mayor para compararlos con Jacobi.
+
+\subsubsection*{4. Frecuencias naturales}
+
+Se calcula
+\[
+\omega_i=\sqrt{\lambda_i}.
+\]
+Los resultados son
+\begin{table}[H]
+\centering
+\caption{Eigenvalores y frecuencias naturales.}
+\begin{tabular}{ccccc}
+\toprule
+Modo & $\lambda_i$ [s$^{-2}$] & $\omega_i$ [rad/s] & $f_i=\omega_i/(2\pi)$ [Hz] & $T_i$ [s]\\
+\midrule
+1&152.786405&12.360680&1.9673&0.5083\\
+2&552.786405&23.511410&3.7420&0.2672\\
+3&1047.213595&32.360680&5.1504&0.1942\\
+4&1447.213595&38.042261&6.0546&0.1652\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Como comprobación, para una cadena uniforme con $N$ masas la expresión conocida es
+\begin{equation}
+\lambda_n=\frac{2k}{m}\left(1-\cos\frac{n\pi}{N+1}\right),
+\end{equation}
+por lo que
+\begin{equation}
+\omega_n=2\sqrt{\frac{k}{m}}\sin\left(\frac{n\pi}{2(N+1)}\right).
+\end{equation}
+Con $k/m=400$ y $N=4$:
+\begin{equation}
+\boxed{\omega_n=40\sin\left(\frac{n\pi}{10}\right)\ \mathrm{rad/s}.}
+\end{equation}
+Los valores numéricos coinciden con esta expresión hasta la precisión de la máquina.
+
+Los perfiles de los modos se muestran en la figura.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth]{figuras/p2_modos.png}
+\caption{Perfiles espaciales de los cuatro modos normales.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{figuras/p2_jacobi.png}
+\caption{Convergencia de las rotaciones de Jacobi.}
+\end{figure}
+
+\subsubsection*{5. Interpretación física}
+
+En el primer modo las cuatro masas se desplazan prácticamente en fase y no aparece ningún nodo interno. En el segundo modo aparece un nodo aproximadamente en el centro. En el tercer modo aparecen dos nodos y en el cuarto tres. Al aumentar el número de nodos aumenta la deformación de los resortes y, por tanto, aumenta la frecuencia.
+
+La frecuencia máxima de la cadena es menor que
+\[
+2\sqrt{\frac{k}{m}}=40\ \mathrm{rad/s},
+\]
+que corresponde al límite superior de frecuencias de una cadena discreta uniforme.
+
+\subsubsection*{Conclusión del problema 2}
+
+Jacobi entrega todos los eigenvalores y eigenvectores de una matriz simétrica. El método de la potencia es más sencillo conceptualmente, pero encuentra un eigenvalor a la vez y necesita deflación para continuar. Ambos métodos producen los mismos valores para esta cadena.
+
+%=====================================================================
+\section{Unidad 2: Soluciones Numéricas de Ecuaciones No Lineales}
+%=====================================================================
+
+%=====================================================================
+\subsection{Problema 3: Ecuación de Kepler y Dinámica Orbital}
+%=====================================================================
+
+\subsubsection*{Enunciado}
+
+Se debe resolver
+\begin{equation}
+f(E)=E-e\sin(E)-M=0,
+\end{equation}
+para $M=1.5$ rad. Se pide reescribirla como punto fijo, aplicar relajación para $e=0.1$ y $e=0.92$, analizar la condición $|g'(E)|<1$, y comparar con bisección en $[0,2\pi]$ para $e\in[0.1,0.95]$ con tolerancia $10^{-6}$.
+
+\subsubsection*{1. Método de relajación}
+
+Partimos de
+\[
+E-e\sin E-M=0.
+\]
+Despejando $E$:
+\begin{equation}
+\boxed{E=g(E)=M+e\sin E.}
+\end{equation}
+
+La iteración de punto fijo es
+\begin{equation}
+\boxed{E_{n+1}=M+e\sin E_n.}
+\end{equation}
+
+Se toma como valor inicial $E_0=M=1.5$ rad.
+
+\paragraph{Caso $e=0.1$.}
+
+La primera iteración es
+\[
+E_1=1.5+0.1\sin(1.5)=1.599749499.
+\]
+La siguiente:
+\[
+E_2=1.5+0.1\sin(1.599749499)=1.599958089.
+\]
+La tercera:
+\[
+E_3=1.5+0.1\sin(1.599958089)=1.599957483.
+\]
+Ya se tiene
+\[
+|E_3-E_2|=6.06\times10^{-7}<10^{-6},
+\]
+por lo que se detiene en 3 iteraciones.
+
+\paragraph{Caso $e=0.92$.}
+
+Las iteraciones comienzan como
+\begin{align}
+E_0&=1.500000000,\\
+E_1&=2.417695388,\\
+E_2&=2.109324872,\\
+E_3&=2.289787138,\\
+E_4&=2.192273127,\\
+E_5&=2.247977937,\\
+E_6&=2.216994467,\\
+E_7&=2.234508564,\\
+E_8&=2.224693898.
+\end{align}
+
+Al seguir el mismo cálculo se obtiene
+\begin{table}[H]
+\centering
+\caption{Iteraciones de relajación para $e=0.92$.}
+\begin{tabular}{c|c}
+\toprule
+$n$ & $E_n$ [rad]\\
+\midrule
+0&1.500000000\\
+1&2.417695388\\
+2&2.109324872\\
+3&2.289787138\\
+4&2.192273127\\
+5&2.247977937\\
+6&2.216994467\\
+7&2.234508564\\
+8&2.224693898\\
+9&2.230221481\\
+10&2.227116985\\
+11&2.228863327\\
+12&2.227881837\\
+13&2.228433733\\
+14&2.228123486\\
+15&2.228297918\\
+16&2.228199855\\
+17&2.228254987\\
+18&2.228223992\\
+19&2.228241417\\
+20&2.228231621\\
+21&2.228237128\\
+22&2.228234032\\
+23&2.228235773\\
+24&2.228234794\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Por el criterio usado,
+\[
+|E_{24}-E_{23}|=9.79\times10^{-7}<10^{-6},
+\]
+por lo que se necesitan 24 iteraciones.
+
+\subsubsection*{2. Convergencia de la relajación}
+
+Para
+\[
+g(E)=M+e\sin E
+\]
+la derivada es
+\begin{equation}
+\boxed{g'(E)=e\cos E.}
+\end{equation}
+
+La condición local de convergencia es
+\[
+|g'(E^*)|<1.
+\]
+Además, como $|\cos E|\le 1$ y para una órbita elíptica $0\le e<1$,
+\begin{equation}
+|g'(E)|\le e<1.
+\end{equation}
+Esto explica por qué la iteración converge para el problema considerado. Sin embargo, la rapidez depende del valor de $|g'(E^*)|$.
+
+Para $e=0.1$, con $E^*\approx1.599957484$:
+\[
+|g'(E^*)|
+=0.1|\cos(1.599957484)|
+\approx0.00292.
+\]
+
+Para $e=0.92$, con $E^*\approx2.228235176$:
+\[
+|g'(E^*)|
+=0.92|\cos(2.228235176)|
+\approx0.5622.
+\]
+
+Esto concuerda con los cocientes de errores. En una iteración de punto fijo, cerca de la raíz,
+\begin{equation}
+e_{n+1}\approx g'(E^*)e_n,
+\end{equation}
+por lo que se espera aproximadamente
+\[
+\frac{e_{n+1}}{e_n}\approx|g'(E^*)|.
+\]
+
+En el caso $e=0.1$ el cociente se estabiliza cerca de $0.0029$, mientras que para $e=0.92$ queda cerca de $0.56$. Por eso el segundo caso necesita muchas más iteraciones.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{figuras/p3_convergencia.png}
+\caption{Errores de relajación y bisección para algunos valores de excentricidad.}
+\end{figure}
+
+\subsubsection*{3. Método de bisección}
+
+Definimos
+\[
+f(E)=E-e\sin E-M.
+\]
+En los extremos del intervalo propuesto:
+\[
+f(0)=-M=-1.5<0,
+\]
+\[
+f(2\pi)=2\pi-M>0.
+\]
+Por lo tanto, existe al menos una raíz en $[0,2\pi]$.
+
+En cada iteración se calcula
+\[
+E_m=\frac{a+b}{2}
+\]
+y se conserva la mitad del intervalo donde cambia el signo.
+
+Si la longitud inicial es $2\pi$, después de $n$ bisecciones la mitad del ancho del intervalo es
+\[
+\frac{2\pi}{2^{n+1}}=\frac{\pi}{2^n}.
+\]
+Para que sea menor que $10^{-6}$:
+\[
+\frac{\pi}{2^n}<10^{-6},
+\]
+\[
+2^n>\frac{\pi}{10^{-6}},
+\]
+\[
+ n>\log_2\left(\frac{\pi}{10^{-6}}\right).
+\]
+Por tanto,
+\begin{equation}
+\boxed{n=22.}
+\end{equation}
+
+Para $e=0.92$ las primeras bisecciones son:
+\begin{table}[H]
+\centering
+\caption{Primeras iteraciones de bisección para $e=0.92$.}
+\begin{tabular}{c|cccc}
+\toprule
+$n$ & $a_n$ & $b_n$ & $E_m$ & $f(E_m)$\\
+\midrule
+1&0&6.283185&3.141593&1.641593\\
+2&0&3.141593&1.570796&$-0.849204$\\
+3&1.570796&3.141593&2.356194&0.205656\\
+4&1.570796&2.356194&1.963495&$-0.386474$\\
+5&1.963495&2.356194&2.159845&$-0.105107$\\
+6&2.159845&2.356194&2.258020&0.046850\\
+7&2.159845&2.258020&2.208932&$-0.030019$\\
+8&2.208932&2.258020&2.233476&0.008197\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Al llegar a la iteración 22, el intervalo ya es suficientemente pequeño y la aproximación es
+\[
+E\approx2.228234426\ \text{rad}.
+\]
+La raíz de referencia obtenida con una tolerancia mucho menor es aproximadamente
+\[
+E^*=2.228235176\ \text{rad}.
+\]
+
+\subsubsection*{4. Barrido de excentricidades}
+
+Se realizó el barrido pedido desde $e=0.10$ hasta $e=0.95$, con paso 0.01. Para bisección se obtuvieron siempre 22 iteraciones. Para relajación el número depende de $e$ y de $M$.
+
+Para $M=1.5$ se obtienen, por ejemplo:
+\begin{table}[H]
+\centering
+\caption{Comparación de iteraciones.}
+\begin{tabular}{cccc}
+\toprule
+$e$ & Relajación, $M=1.5$ & Bisección & Relajación, $M=0.01$\\
+\midrule
+0.10&3&22&4\\
+0.30&6&22&8\\
+0.50&9&22&14\\
+0.70&14&22&26\\
+0.80&18&22&42\\
+0.90&23&22&85\\
+0.92&24&22&103\\
+0.95&27&22&142\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La gráfica obtenida por el programa es
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{figuras/p3_iteraciones.png}
+\caption{Número de iteraciones en función de la excentricidad.}
+\end{figure}
+
+La principal diferencia es que bisección siempre reduce el intervalo a la mitad, mientras que relajación depende de la pendiente de $g$. En este problema la relajación es muy rápida cuando $|e\cos E^*|$ es pequeño, pero puede hacerse bastante lenta cuando ese valor se acerca a 1.
+
+\subsubsection*{Conclusión del problema 3}
+
+La relajación es sencilla y en muchos casos muy rápida, pero la rapidez depende de la derivada de la función de punto fijo. Bisección es más lenta, pero el número de iteraciones se puede estimar antes de comenzar y no depende de una elección delicada de la semilla.
+
+%=====================================================================
+\subsection{Problema 4: Termodinámica Real y Sistemas No Lineales Multivariables}
+%=====================================================================
+
+\subsubsection*{Enunciado}
+
+\textbf{Parte A.} Para CO$_2$ se debe resolver
+\begin{equation}
+f(v)=\left(P+\frac{a}{v^2}\right)(v-b)-RT=0,
+\end{equation}
+con
+\[
+a=0.3643,\quad
+b=4.267\times10^{-5}\ \mathrm{m^3/mol},
+\quad
+P=2\times10^6\ \mathrm{Pa},
+\quad
+T=300\ \mathrm K.
+\]
+Se pide aplicar Newton y secante y comparar la convergencia.
+
+\textbf{Parte B.} Se debe resolver
+\begin{equation}
+\begin{cases}
+f_1(x,y)=x^3-3xy^2-1=0,\\
+f_2(x,y)=3x^2y-y^3=0.
+\end{cases}
+\end{equation}
+Se pide utilizar relajación de varias variables y después Newton multivariable con el Jacobiano indicado en el enunciado.
+
+%---------------------------------------------------------------------
+\subsubsection*{Parte A: ecuación de Van der Waals}
+%---------------------------------------------------------------------
+
+\paragraph{1. Función y semilla inicial.}
+
+La función es
+\[
+f(v)=\left(P+\frac{a}{v^2}\right)(v-b)-RT.
+\]
+Para empezar se usa el volumen ideal
+\begin{equation}
+\boxed{v_0=\frac{RT}{P}.}
+\end{equation}
+Numéricamente,
+\[
+v_0=\frac{(8.314)(300)}{2\times10^6}
+=1.24710\times10^{-3}\ \mathrm{m^3/mol}.
+\]
+
+Derivando:
+\[
+f(v)=Pv-Pb+\frac{a}{v}-\frac{ab}{v^2}-RT,
+\]
+por lo que
+\begin{equation}
+\boxed{f'(v)=P-\frac{a}{v^2}+\frac{2ab}{v^3}.}
+\end{equation}
+
+\paragraph{2. Método de Newton.}
+
+La fórmula es
+\begin{equation}
+\boxed{v_{n+1}=v_n-\frac{f(v_n)}{f'(v_n)}.}
+\end{equation}
+
+Con $v_0=1.24710\times10^{-3}$ m$^3$/mol, las primeras iteraciones son:
+\begin{table}[H]
+\centering
+\caption{Newton para Van der Waals.}
+\begin{tabular}{c|cc}
+\toprule
+$n$ & $v_n$ [m$^3$/mol] & $|v_n-v^*|$\\
+\midrule
+0&$1.247100000\times10^{-3}$&$1.117\times10^{-4}$\\
+1&$1.136659020\times10^{-3}$&$1.292\times10^{-6}$\\
+2&$1.135366943\times10^{-3}$&$2.116\times10^{-10}$\\
+3&$1.135366731\times10^{-3}$&$\sim10^{-17}$\\
+4&$1.135366731\times10^{-3}$&precisión de máquina\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El volumen convergido es
+\begin{equation}
+\boxed{v^*=1.135366730962\times10^{-3}\ \mathrm{m^3/mol}.}
+\end{equation}
+
+\paragraph{3. Método de la secante.}
+
+Como la secante evita calcular $f'(v)$, se usan dos valores iniciales:
+\[
+v_0=1.24710\times10^{-3},
+\qquad
+v_1=0.9v_0=1.12239\times10^{-3}\ \mathrm{m^3/mol}.
+\]
+La fórmula es
+\begin{equation}
+\boxed{
+ v_{n+1}=v_n-f(v_n)\frac{v_n-v_{n-1}}{f(v_n)-f(v_{n-1})}.}
+\end{equation}
+
+Los valores calculados son aproximadamente
+\begin{table}[H]
+\centering
+\caption{Secante para Van der Waals.}
+\begin{tabular}{c|cc}
+\toprule
+$n$ & $v_n$ [m$^3$/mol] & $|v_n-v^*|$\\
+\midrule
+0&$1.247100000\times10^{-3}$&$1.117\times10^{-4}$\\
+1&$1.122390000\times10^{-3}$&$1.297\times10^{-5}$\\
+2&$1.135198481\times10^{-3}$&$1.682\times10^{-7}$\\
+3&$1.135367012\times10^{-3}$&$2.809\times10^{-10}$\\
+4&$1.135366731\times10^{-3}$&$6.005\times10^{-15}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{4. Orden de convergencia.}
+
+En Newton, alrededor de una raíz simple, el error satisface aproximadamente
+\begin{equation}
+|e_{n+1}|\approx C|e_n|^2.
+\end{equation}
+Por eso el orden teórico es 2. En los resultados, el cociente
+\[
+\frac{e_{n+1}}{e_n^2}
+\]
+se mantiene aproximadamente del mismo orden de magnitud durante las primeras iteraciones, lo cual confirma la convergencia cuadrática.
+
+Para secante, el orden teórico satisface
+\[
+p^2=p+1,
+\]
+de donde
+\begin{equation}
+\boxed{p=\frac{1+\sqrt5}{2}\approx1.618.}
+\end{equation}
+A partir de los errores no muy cercanos todavía a la precisión de máquina se obtienen valores próximos a $1.5$--$1.7$, coherentes con el orden esperado. Cuando el error ya es demasiado pequeño, la aritmética de doble precisión deja de permitir una estimación confiable del orden.
+
+El factor de compresibilidad es
+\begin{equation}
+Z=\frac{Pv^*}{RT}=0.9104055.
+\end{equation}
+Por tanto, el volumen real predicho por Van der Waals es aproximadamente un 8.96\% menor que el volumen del gas ideal para estas condiciones.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{figuras/p4a_convergencia.png}
+\caption{Convergencia de Newton y secante para la ecuación de Van der Waals.}
+\end{figure}
+
+%---------------------------------------------------------------------
+\subsubsection*{Parte B: sistema no lineal $2\times2$}
+%---------------------------------------------------------------------
+
+\paragraph{1. Escribir explícitamente el sistema.}
+
+Se tiene
+\begin{align}
+f_1(x,y)&=x^3-3xy^2-1,\\
+f_2(x,y)&=3x^2y-y^3.
+\end{align}
+
+El Jacobiano pedido es
+\begin{equation}
+\boxed{
+J(x,y)=
+\begin{pmatrix}
+3x^2-3y^2&-6xy\\
+6xy&3x^2-3y^2
+\end{pmatrix}.}
+\end{equation}
+
+Una forma de ver las raíces es usar $z=x+iy$. Como
+\[
+z^3=(x^3-3xy^2)+i(3x^2y-y^3),
+\]
+el sistema equivale a
+\[
+z^3=1.
+\]
+Las tres raíces cúbicas de 1 son
+\[
+1,
+\qquad
+-\frac12+i\frac{\sqrt3}{2},
+\qquad
+-\frac12-i\frac{\sqrt3}{2}.
+\]
+Por tanto las tres soluciones en el plano son
+\begin{equation}
+\boxed{(1,0),
+\quad
+\left(-\frac12,\frac{\sqrt3}{2}\right),
+\quad
+\left(-\frac12,-\frac{\sqrt3}{2}\right).}
+\end{equation}
+
+\paragraph{2. Relajación de dos variables.}
+
+Para poder usar una iteración sencilla se toma
+\begin{align}
+x^{(k+1)}&=x^{(k)}-w f_1(x^{(k)},y^{(k)}),\\
+y^{(k+1)}&=y^{(k)}-w f_2(x^{(k+1)},y^{(k)}).
+\end{align}
+
+La segunda ecuación usa el nuevo valor de $x$, de modo que la actualización es de tipo Gauss--Seidel.
+
+Como el método depende del factor $w$, se probaron $w=0.2$ y $w=-0.2$.
+
+Con $w=0.2$ y la semilla $(0.8,0.3)$ se obtiene la raíz $(1,0)$. Con $w=0.2$ y la semilla $(1.3,-0.4)$ ocurre lo mismo.
+
+En cambio, con $w=0.2$ y la semilla $(-0.4,0.8)$ la iteración diverge. Esto no significa que el sistema no tenga la raíz, sino que esa combinación de semilla y parámetro no produce una iteración contractiva.
+
+Con $w=-0.2$, las raíces complejas se alcanzan desde semillas cercanas a ellas. Los resultados del programa son:
+\begin{table}[H]
+\centering
+\caption{Relajación de dos variables.}
+\begin{tabular}{c|c|c|c}
+\toprule
+$w$ & $(x_0,y_0)$ & iteraciones & resultado\\
+\midrule
+$0.2$&$(0.8,0.3)$&30&$(1,0)$\\
+$0.2$&$(1.3,-0.4)$&30&$(1,0)$\\
+$0.2$&$(-0.4,0.8)$&diverge&---\\
+$-0.2$&$(-0.4,0.8)$&72&$(-0.5,0.866025)$\\
+$-0.2$&$(-0.6,-0.7)$&74&$(-0.5,-0.866025)$\\
+$-0.2$&$(0.8,0.3)$&83&$(-0.5,0.866025)$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La conclusión de esta prueba es que la relajación multivariable depende bastante de la semilla y del parámetro elegido. No existe un único valor de $w$ utilizado en estas pruebas que haga converger todas las semillas a las tres raíces.
+
+\paragraph{3. Newton multivariable.}
+
+La fórmula de Newton para dos variables es
+\begin{equation}
+J(x_k,y_k)
+\begin{pmatrix}
+\Delta x_k\\
+\Delta y_k
+\end{pmatrix}
+=
+-
+\begin{pmatrix}
+f_1(x_k,y_k)\\
+f_2(x_k,y_k)
+\end{pmatrix},
+\end{equation}
+seguida de
+\begin{align}
+x_{k+1}&=x_k+\Delta x_k,\\
+y_{k+1}&=y_k+\Delta y_k.
+\end{align}
+
+El paso de Newton requiere resolver un sistema lineal $2\times2$. Como el taller pide emplear el método de Gauss de la Unidad 1, el programa utiliza 	exttt{gauss\_pivoteo} para calcular $\Delta x$ y $\Delta y$.
+
+\paragraph{Ejemplo completo desde la semilla $(0.8,0.3)$.}
+
+En el punto inicial,
+\begin{align}
+f_1(0.8,0.3)&=0.8^3-3(0.8)(0.3)^2-1\\
+&=0.512-0.216-1=-0.704,\\
+f_2(0.8,0.3)&=3(0.8)^2(0.3)-(0.3)^3\\
+&=0.576-0.027=0.549.
+\end{align}
+
+El Jacobiano es
+\begin{equation}
+J(0.8,0.3)=
+\begin{pmatrix}
+3(0.8)^2-3(0.3)^2&-6(0.8)(0.3)\\
+6(0.8)(0.3)&3(0.8)^2-3(0.3)^2
+\end{pmatrix}
+=
+\begin{pmatrix}
+1.65&-1.44\\
+1.44&1.65
+\end{pmatrix}.
+\end{equation}
+
+El sistema para el primer paso es
+\begin{equation}
+\begin{pmatrix}
+1.65&-1.44\\
+1.44&1.65
+\end{pmatrix}
+\begin{pmatrix}
+\Delta x_0\\
+\Delta y_0
+\end{pmatrix}
+=
+\begin{pmatrix}
+0.704\\
+-0.549
+\end{pmatrix}.
+\end{equation}
+
+Al resolverlo se obtiene aproximadamente
+\[
+\Delta x_0=0.0840,
+\qquad
+\Delta y_0=-0.1583,
+\]
+por lo que
+\[
+(x_1,y_1)\approx(0.8840,0.1417).
+\]
+Los pasos siguientes se repiten hasta que el cambio en las variables sea menor que $10^{-14}$.
+
+Los resultados para varias semillas son:
+\begin{table}[H]
+\centering
+\caption{Newton multivariable.}
+\begin{tabular}{ccc}
+\toprule
+Semilla & Iteraciones & Raíz alcanzada\\
+\midrule
+$(0.8,0.3)$&7&$(1,0)$\\
+$(-0.4,0.8)$&5&$(-0.5,0.866025)$\\
+$(-0.6,-0.7)$&6&$(-0.5,-0.866025)$\\
+$(2.0,2.0)$&10&$(1,0)$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Para comparar la rapidez, desde $(0.8,0.3)$ la norma del error es aproximadamente
+\begin{table}[H]
+\centering
+\caption{Error durante las iteraciones de relajación y Newton.}
+\begin{tabular}{c|cc}
+\toprule
+$k$ & Relajación $w=0.2$ & Newton\\
+\midrule
+0&$3.606\times10^{-1}$&$3.606\times10^{-1}$\\
+1&$1.576\times10^{-1}$&$1.584\times10^{-1}$\\
+2&$6.295\times10^{-2}$&$2.962\times10^{-2}$\\
+3&$2.509\times10^{-2}$&$8.752\times10^{-4}$\\
+4&$1.003\times10^{-2}$&$7.669\times10^{-7}$\\
+5&$4.010\times10^{-3}$&$5.881\times10^{-13}$\\
+6&$1.604\times10^{-3}$&$2.986\times10^{-25}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Para la relajación se obtiene aproximadamente
+\[
+\frac{e_{k+1}}{e_k}\approx0.4,
+\]
+por lo que la convergencia es lineal. En Newton, en cambio, para las primeras iteraciones ya aparece
+\[
+\frac{e_{k+1}}{e_k^2}\approx1,
+\]
+lo que es consistente con convergencia cuadrática.
+
+La figura de convergencia permite ver la diferencia entre ambos métodos.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\textwidth]{figuras/p4b_convergencia.png}
+\caption{Comparación entre relajación y Newton para el sistema de dos variables.}
+\end{figure}
+
+
+\subsubsection*{Conclusión del problema 4}
+
+En la ecuación de Van der Waals, Newton llega rápidamente a la raíz porque dispone de la derivada, mientras que secante evita calcularla y también converge de manera rápida. En el sistema de dos variables, la relajación es fácil de programar pero es sensible al factor $w$ y a la semilla. Newton requiere resolver un sistema lineal en cada paso, pero cerca de una raíz simple converge mucho más rápidamente.
+
+%=====================================================================
+\section{Conclusiones generales}
+%=====================================================================
+
+En el primer problema se observó que la estructura de una matriz puede aprovecharse para disminuir el trabajo numérico. La matriz de la barra es tridiagonal y por eso Thomas es más rápido que Gauss. También se vio que la inversa representa la respuesta de todos los nodos frente a una fuente colocada en un nodo determinado.
+
+En el segundo problema los eigenvalores representan el cuadrado de las frecuencias naturales de la cadena. Jacobi encuentra todos los modos de una matriz simétrica, mientras que la potencia encuentra uno por uno y necesita deflación para continuar.
+
+En el problema de Kepler la relajación resulta muy rápida cuando $|g'(E^*)|$ es pequeño, pero su número de iteraciones aumenta al acercarse la excentricidad a uno. Bisección es más lenta pero tiene un número de pasos que se puede prever.
+
+En el último problema se compararon Newton y secante en una ecuación escalar y, en el sistema de dos variables, relajación y Newton multivariable. En todos los casos se observa la diferencia entre métodos de convergencia lineal y métodos de orden superior.
+
+\newpage
+%=====================================================================
+\appendix
+\section{Código fuente}
+%=====================================================================
+
+A continuación se presentan los códigos de Python usados para la resolución de los problemas.
+
+\subsection{lineal.py}
+\lstinputlisting{codigos/lineal.py}
+
+\subsection{problema1.py}
+\lstinputlisting{codigos/problema1.py}
+
+\subsection{problema2.py}
+\lstinputlisting{codigos/problema2.py}
+
+\subsection{problema3.py}
+\lstinputlisting{codigos/problema3.py}
+
+\subsection{problema4.py}
+\lstinputlisting{codigos/problema4.py}
+
+\end{document}
